@@ -126,7 +126,6 @@ def normalise_answer(C):
 def solve(reactant, product, atoms, A, B):
     A_ = np.linalg.inv(A)
     C = np.dot(A_, B) * det(A)
-    print("it yields \n", C)
 
     # The number of molecules in A (= total minus the ones in B). The last item the determinant of A.
     num_mol_A = len(reactant) + len(product) - 1
@@ -167,18 +166,15 @@ def main():
     try:
         # Get the molecules
         reactant_molecules, product_molecules = molecules_in(reaction.split(" -> ")[0]), molecules_in(reaction.split(" -> ")[1])
-        print("I understood: ", reactant_molecules, " -> ", product_molecules)
 
         # Get the unique atoms
         atoms = unique_atoms(reactant_molecules)
         if not set(atoms) == set(unique_atoms(product_molecules)):
             print("reactant is not product")
             sys.exit(1)
-        print("It contains the following atoms: ", atoms)
         
         # Create a one dimensional B matrix. Move the other molecules to A and multiply the number by -1.
         A, B = construct_matrices(atoms, reactant_molecules, product_molecules)
-        print("Create 2 matrices: \n", A, "\n",  B)
 
         # Solve the matrix equation
         reactant_answer, product_answer = solve(reactant_molecules, product_molecules, atoms, A, B)
